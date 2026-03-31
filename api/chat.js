@@ -1,17 +1,16 @@
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  // Vercel tự parse JSON cho Node.js
   const { messages, password } = req.body;
 
-  // 1. Kiểm tra mật khẩu
+  // 1. Kiểm tra xác thực (Bảo mật cho bài tập)
   if (password !== "123456") {
-    return res.status(401).json({ error: "Sai mật khẩu!" });
+    return res.status(401).json({ error: "Xác thực không hợp lệ. Hãy đăng nhập lại." });
   }
 
-  // 2. Kiểm tra Key bí mật
+  // 2. Kiểm tra API Key (Bảo mật API của mày)
   if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: "Thiếu GROQ_API_KEY trên Vercel!" });
+    return res.status(500).json({ error: "Lỗi Server: Chưa cấu hình GROQ_API_KEY." });
   }
 
   try {
@@ -24,15 +23,20 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         model: "llama3-8b-8192",
         messages: [
-          { role: "system", content: "Mày là một chuyên gia về AI và AI Agent. Trả lời bằng tiếng Việt." },
+          { 
+            role: "system", 
+            content: "Mày là một chuyên gia cao cấp về AI và AI Agent. Chỉ trả lời các câu hỏi về AI bằng tiếng Việt, súc tích, chuyên sâu. Nếu câu hỏi không liên quan đến AI, hãy từ chối lịch sự." 
+          },
           ...messages
         ],
+        temperature: 0.6,
+        max_tokens: 1024
       }),
     });
 
     const data = await response.json();
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: "Hệ thống gặp sự cố: " + error.message });
   }
 };
