@@ -3,14 +3,14 @@ module.exports = async (req, res) => {
 
   const { messages, password } = req.body;
 
-  // 1. Kiểm tra xác thực (Bảo mật cho bài tập)
+  // KIỂM TRA MẬT KHẨU Ở SERVER (Bảo mật tuyệt đối cho bài tập)
   if (password !== "123456") {
-    return res.status(401).json({ error: "Xác thực không hợp lệ. Hãy đăng nhập lại." });
+    return res.status(401).json({ error: "Xác thực không hợp lệ! Mật khẩu sai ở Backend." });
   }
 
-  // 2. Kiểm tra API Key (Bảo mật API của mày)
+  // KIỂM TRA API KEY (Bảo mật cho ví tiền của mày)
   if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: "Lỗi Server: Chưa cấu hình GROQ_API_KEY." });
+    return res.status(500).json({ error: "Chưa cấu hình API Key trên Vercel." });
   }
 
   try {
@@ -25,18 +25,17 @@ module.exports = async (req, res) => {
         messages: [
           { 
             role: "system", 
-            content: "Mày là một chuyên gia cao cấp về AI và AI Agent. Chỉ trả lời các câu hỏi về AI bằng tiếng Việt, súc tích, chuyên sâu. Nếu câu hỏi không liên quan đến AI, hãy từ chối lịch sự." 
+            content: "Bạn là trợ lý chuyên gia của MR CƯỜNG. Chỉ trả lời các vấn đề liên quan đến AI và AI Agent bằng tiếng Việt một cách chuyên nghiệp." 
           },
           ...messages
         ],
-        temperature: 0.6,
-        max_tokens: 1024
+        temperature: 0.5,
       }),
     });
 
     const data = await response.json();
     return res.status(200).json(data);
   } catch (error) {
-    return res.status(500).json({ error: "Hệ thống gặp sự cố: " + error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
