@@ -3,85 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MR CƯỜNG | AI AGENT HUB</title>
+    <title>MR CƯỜNG | AI HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000000; color: #e2e8f0; }
-        .dark-gradient { background: linear-gradient(135deg, #111827 0%, #000000 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .user-bubble { background: linear-gradient(90deg, #374151 0%, #1f2937 100%); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .ai-bubble { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .animate-slide-up { animation: slideUp 0.4s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .loading-dot { animation: dot 1.4s infinite; }
-        @keyframes dot { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+        
+        :root {
+            --bg-dark: #06100c;
+            --card-dark: #0c1a16;
+            --electric-green: #10b981;
+            --neon-glow: rgba(16, 185, 129, 0.3);
+        }
+
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            background-color: var(--bg-dark);
+            color: #ecfdf5;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .forest-gradient {
+            background: radial-gradient(circle at top right, #0d2d24 0%, var(--bg-dark) 100%);
+        }
+
+        .neo-card {
+            background: var(--card-dark);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .electric-border {
+            border-bottom: 2px solid var(--electric-green);
+            box-shadow: 0 4px 15px var(--neon-glow);
+        }
+
+        .user-msg {
+            background: #112a22;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px 20px 4px 20px;
+        }
+
+        .ai-msg {
+            background: #0a1511;
+            border-radius: 20px 20px 20px 4px;
+        }
+
+        .glow-circle {
+            border: 3px solid var(--electric-green);
+            box-shadow: 0 0 20px var(--neon-glow), inset 0 0 15px var(--neon-glow);
+        }
+
+        .loading-dot {
+            width: 6px; height: 6px; background: var(--electric-green);
+            border-radius: 50%; animation: blink 1.4s infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        
+        input::placeholder { color: #3d5a4e; }
+        
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #112a22; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-0 md:p-4 dark-gradient">
+<body class="min-h-screen flex items-center justify-center forest-gradient">
 
     <!-- MÀN HÌNH ĐĂNG NHẬP -->
-    <div id="auth-screen" class="w-full max-w-md p-10 glass-card rounded-[2.5rem] text-center animate-slide-up mx-4">
-        <div class="mb-10">
-            <div class="w-24 h-24 bg-gradient-to-tr from-gray-700 to-gray-900 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-gray-600">
-                <i class="fa-solid fa-user-shield text-white text-4xl"></i>
+    <div id="auth-screen" class="w-full max-w-sm p-10 neo-card rounded-[3rem] text-center relative z-10 transition-all duration-500">
+        <div class="mb-8 relative">
+            <!-- Vòng tròn hiển thị 100% giống ảnh mẫu -->
+            <div class="w-32 h-32 glow-circle rounded-full flex flex-col items-center justify-center mx-auto mb-6">
+                <span class="text-3xl font-bold text-white">100%</span>
+                <span class="text-[10px] text-emerald-500 uppercase tracking-widest">Active</span>
             </div>
-            <h1 class="text-4xl font-extrabold text-white tracking-tighter mb-2">MR CƯỜNG</h1>
-            <p class="text-gray-400 text-sm font-medium tracking-widest uppercase">AI AGENT SECURE SYSTEM</p>
+            <h1 class="text-3xl font-bold text-white tracking-tight">MR CƯỜNG</h1>
+            <p class="text-emerald-500/60 text-xs mt-2 uppercase tracking-[0.3em]">Vui lòng nhập mật khẩu</p>
         </div>
         
         <div class="space-y-6">
-            <div class="relative">
-                <input type="password" id="pass-input" placeholder="Vui lòng nhập mật khẩu" 
-                    class="w-full p-5 bg-black/50 border border-gray-800 rounded-2xl text-center text-white placeholder-gray-600 focus:border-white outline-none transition-all text-lg tracking-[0.3em]">
-            </div>
+            <input type="password" id="pass-input" placeholder="••••••" 
+                class="w-full p-4 bg-[#0a1511] border border-emerald-900/30 rounded-2xl text-center text-white focus:border-emerald-500 outline-none transition-all text-xl tracking-widest">
+            
             <button onclick="checkAuth()" 
-                class="w-full bg-white text-black font-black p-5 rounded-2xl hover:bg-gray-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                ACCESS SYSTEM
+                class="w-full bg-emerald-500 text-[#06100c] font-bold p-4 rounded-2xl hover:bg-emerald-400 transition-all active:scale-95 shadow-lg shadow-emerald-500/20">
+                KẾT NỐI HỆ THỐNG
             </button>
         </div>
-        <p class="text-[10px] text-gray-500 mt-10 uppercase tracking-[0.4em]">Encrypted by Groq & Llama 3.3</p>
     </div>
 
-    <!-- GIAO DIỆN CHAT CHÍNH -->
-    <div id="chat-screen" class="hidden w-full max-w-4xl h-screen md:h-[90vh] glass-card flex flex-col md:rounded-[2rem] overflow-hidden shadow-2xl animate-slide-up">
+    <!-- GIAO DIỆN CHAT -->
+    <div id="chat-screen" class="hidden w-full max-w-4xl h-screen md:h-[85vh] neo-card flex flex-col md:rounded-[2.5rem] overflow-hidden transition-all duration-700">
         <!-- Header -->
-        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
+        <div class="p-6 bg-[#0c1a16] border-b border-emerald-900/20 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
-                    <i class="fa-solid fa-bolt text-white text-xl"></i>
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                    <i class="fa-solid fa-microchip"></i>
                 </div>
                 <div>
-                    <h2 class="font-extrabold text-xl text-white tracking-tight">MR CƯỜNG AI HUB</h2>
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Core: Llama 3.3 70B Active</span>
-                    </div>
+                    <h2 class="font-bold text-lg text-white">MR CƯỜNG AI HUB</h2>
+                    <p class="text-[10px] text-emerald-500 font-medium tracking-widest uppercase">Hệ thống đang sạc 100%</p>
                 </div>
             </div>
-            <button onclick="location.reload()" class="w-10 h-10 rounded-full hover:bg-white/10 text-gray-500 hover:text-white transition-all">
+            <button onclick="location.reload()" class="w-10 h-10 rounded-full hover:bg-emerald-500/10 text-emerald-900 hover:text-emerald-500 transition-all">
                 <i class="fa-solid fa-power-off"></i>
             </button>
         </div>
 
         <!-- Chat Area -->
         <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 bg-transparent">
-            <div class="ai-bubble p-5 rounded-2xl max-w-[85%] text-gray-300 leading-relaxed shadow-sm">
-                Xin chào chuyên gia! Tôi là trợ lý AI cao cấp của <b>MR CƯỜNG</b>. 
-                Tôi đã sẵn sàng giải đáp mọi thắc mắc về <b>AI & AI Agent</b>. Hãy đặt câu hỏi cho tôi.
+            <div class="ai-msg p-5 text-emerald-100 max-w-[85%] shadow-sm">
+                Chào chuyên gia! Tôi là Trợ lý của <b>MR CƯỜNG</b>. Hệ thống AI Agent đã sẵn sàng. Bạn cần hỗ trợ gì?
             </div>
         </div>
 
         <!-- Input Area -->
-        <div class="p-6 bg-black/40 border-t border-white/5">
+        <div class="p-6 bg-[#0c1a16]">
             <div class="relative flex items-center gap-4">
-                <input type="text" id="user-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()" 
-                    class="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-white/30 transition-all placeholder-gray-600">
-                <button onclick="sendMessage()" class="bg-white text-black w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-gray-200 transition-all shadow-xl active:scale-90">
-                    <i class="fa-solid fa-arrow-up text-xl"></i>
+                <input type="text" id="user-input" placeholder="Hỏi về AI Agent..." onkeypress="if(event.key==='Enter') sendMessage()" 
+                    class="w-full p-4 bg-[#0a1511] border border-emerald-900/30 rounded-2xl text-white outline-none focus:border-emerald-500 transition-all">
+                <button onclick="sendMessage()" class="bg-emerald-500 text-[#06100c] w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-emerald-400 transition-all shadow-xl active:scale-90">
+                    <i class="fa-solid fa-paper-plane text-lg"></i>
                 </button>
             </div>
         </div>
@@ -94,10 +137,13 @@
             const input = document.getElementById('pass-input').value;
             if (input === "123456") {
                 userPassword = input;
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('chat-screen').classList.remove('hidden');
+                document.getElementById('auth-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('chat-screen').classList.remove('hidden');
+                }, 300);
             } else { 
-                alert("Mã truy cập không hợp lệ!"); 
+                alert("Mã truy cập sai!"); 
             }
         }
 
@@ -107,15 +153,15 @@
             if (!message) return;
 
             const chatBox = document.getElementById('chat-box');
-            
-            // User Message
-            chatBox.innerHTML += `<div class="flex justify-end animate-slide-up"><div class="user-bubble p-5 shadow-2xl text-white">${message}</div></div>`;
+            chatBox.innerHTML += `<div class="flex justify-end"><div class="user-msg p-4 text-emerald-50">${message}</div></div>`;
             chatHistory.push({ role: "user", content: message });
             inputField.value = '';
             
-            // Loading
             const loadingId = 'loading-' + Date.now();
-            chatBox.innerHTML += `<div id="${loadingId}" class="ai-bubble p-5 self-start flex gap-2 text-gray-500"><span class="loading-dot">•</span><span class="loading-dot" style="animation-delay:0.2s">•</span><span class="loading-dot" style="animation-delay:0.4s">•</span> PROCESSING</div>`;
+            chatBox.innerHTML += `
+                <div id="${loadingId}" class="ai-msg p-5 self-start flex gap-2 items-center text-emerald-700">
+                    <div class="loading-dot"></div><div class="loading-dot" style="animation-delay:0.2s"></div><div class="loading-dot" style="animation-delay:0.4s"></div>
+                </div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
@@ -130,14 +176,14 @@
 
                 if (response.ok) {
                     const aiReply = data.choices[0].message.content;
-                    chatBox.innerHTML += `<div class="flex justify-start animate-slide-up"><div class="ai-bubble p-5 text-gray-200 leading-relaxed">${aiReply}</div></div>`;
+                    chatBox.innerHTML += `<div class="flex justify-start"><div class="ai-msg p-5 text-emerald-100">${aiReply}</div></div>`;
                     chatHistory.push({ role: "assistant", content: aiReply });
                 } else {
-                    chatBox.innerHTML += `<div class="p-4 text-red-400 bg-red-950/30 rounded-xl border border-red-900/50">Error: ${data.error}</div>`;
+                    chatBox.innerHTML += `<div class="p-4 text-red-400 bg-red-900/20 rounded-xl">Lỗi: ${data.error}</div>`;
                 }
             } catch (err) {
                 document.getElementById(loadingId).remove();
-                chatBox.innerHTML += `<div class="p-4 text-red-400 bg-red-950/30 rounded-xl border border-red-900/50">Connection Failed.</div>`;
+                chatBox.innerHTML += `<div class="p-4 text-red-400">Không thể kết nối Server.</div>`;
             }
             chatBox.scrollTop = chatBox.scrollHeight;
         }
