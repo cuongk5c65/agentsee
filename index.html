@@ -2,60 +2,144 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>MR CƯỜNG AI HUB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MR CƯỜNG | AI AGENT HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #f1f5f9; font-family: sans-serif; }
-        .user-msg { background: #1e293b; color: white; border-radius: 15px 15px 0 15px; align-self: flex-end; }
-        .ai-msg { background: white; border: 1px solid #e2e8f0; border-radius: 15px 15px 15px 0; align-self: flex-start; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000000; color: #e2e8f0; }
+        .dark-gradient { background: linear-gradient(135deg, #111827 0%, #000000 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .user-bubble { background: linear-gradient(90deg, #374151 0%, #1f2937 100%); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .ai-bubble { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .animate-slide-up { animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .loading-dot { animation: dot 1.4s infinite; }
+        @keyframes dot { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-    <div id="auth" class="bg-white p-8 rounded-3xl shadow-xl text-center w-full max-w-sm">
-        <h2 class="text-2xl font-bold mb-4">MR CƯỜNG</h2>
-        <input type="password" id="pw" placeholder="Mật khẩu..." class="w-full p-3 border rounded-xl mb-4 text-center outline-none">
-        <button onclick="login()" class="w-full bg-black text-white p-3 rounded-xl font-bold">XÁC THỰC</button>
+<body class="min-h-screen flex items-center justify-center p-0 md:p-4 dark-gradient">
+
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
+    <div id="auth-screen" class="w-full max-w-md p-10 glass-card rounded-[2.5rem] text-center animate-slide-up mx-4">
+        <div class="mb-10">
+            <div class="w-24 h-24 bg-gradient-to-tr from-gray-700 to-gray-900 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl border border-gray-600">
+                <i class="fa-solid fa-user-shield text-white text-4xl"></i>
+            </div>
+            <h1 class="text-4xl font-extrabold text-white tracking-tighter mb-2">MR CƯỜNG</h1>
+            <p class="text-gray-400 text-sm font-medium tracking-widest uppercase">AI AGENT SECURE SYSTEM</p>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="relative">
+                <input type="password" id="pass-input" placeholder="Vui lòng nhập mật khẩu" 
+                    class="w-full p-5 bg-black/50 border border-gray-800 rounded-2xl text-center text-white placeholder-gray-600 focus:border-white outline-none transition-all text-lg tracking-[0.3em]">
+            </div>
+            <button onclick="checkAuth()" 
+                class="w-full bg-white text-black font-black p-5 rounded-2xl hover:bg-gray-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                ACCESS SYSTEM
+            </button>
+        </div>
+        <p class="text-[10px] text-gray-500 mt-10 uppercase tracking-[0.4em]">Encrypted by Groq & Llama 3.3</p>
     </div>
 
-    <div id="chat" class="hidden w-full max-w-2xl bg-white shadow-2xl rounded-3xl flex flex-col h-[85vh] overflow-hidden">
-        <div class="p-4 border-b font-bold text-center bg-slate-50">MR CƯỜNG AI HUB</div>
-        <div id="box" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-slate-50">
-            <div class="ai-msg p-3 shadow-sm">Chào! Tôi đã sẵn sàng.</div>
+    <!-- GIAO DIỆN CHAT CHÍNH -->
+    <div id="chat-screen" class="hidden w-full max-w-4xl h-screen md:h-[90vh] glass-card flex flex-col md:rounded-[2rem] overflow-hidden shadow-2xl animate-slide-up">
+        <!-- Header -->
+        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
+                    <i class="fa-solid fa-bolt text-white text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="font-extrabold text-xl text-white tracking-tight">MR CƯỜNG AI HUB</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Core: Llama 3.3 70B Active</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="w-10 h-10 rounded-full hover:bg-white/10 text-gray-500 hover:text-white transition-all">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
         </div>
-        <div class="p-4 border-t flex gap-2">
-            <input type="text" id="in" placeholder="Hỏi AI..." class="flex-1 p-3 border rounded-xl outline-none">
-            <button onclick="send()" class="bg-black text-white px-6 rounded-xl">GỬI</button>
+
+        <!-- Chat Area -->
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-6 bg-transparent">
+            <div class="ai-bubble p-5 rounded-2xl max-w-[85%] text-gray-300 leading-relaxed shadow-sm">
+                Xin chào chuyên gia! Tôi là trợ lý AI cao cấp của <b>MR CƯỜNG</b>. 
+                Tôi đã sẵn sàng giải đáp mọi thắc mắc về <b>AI & AI Agent</b>. Hãy đặt câu hỏi cho tôi.
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-6 bg-black/40 border-t border-white/5">
+            <div class="relative flex items-center gap-4">
+                <input type="text" id="user-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()" 
+                    class="w-full p-5 bg-white/5 border border-white/10 rounded-2xl text-white outline-none focus:border-white/30 transition-all placeholder-gray-600">
+                <button onclick="sendMessage()" class="bg-white text-black w-14 h-14 rounded-2xl flex items-center justify-center hover:bg-gray-200 transition-all shadow-xl active:scale-90">
+                    <i class="fa-solid fa-arrow-up text-xl"></i>
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        let h = []; let p = "";
-        function login() { p = document.getElementById('pw').value; if(p==="123456"){ document.getElementById('auth').classList.add('hidden'); document.getElementById('chat').classList.remove('hidden'); } else alert("Sai!"); }
-        
-        async function send() {
-            const input = document.getElementById('in'); const val = input.value; if(!val) return;
-            const box = document.getElementById('box');
-            box.innerHTML += `<div class="user-msg p-3 shadow-sm">${val}</div>`;
-            h.push({role:"user", content:val}); input.value = ''; box.scrollTop = box.scrollHeight;
+        let chatHistory = []; let userPassword = "";
+
+        function checkAuth() {
+            const input = document.getElementById('pass-input').value;
+            if (input === "123456") {
+                userPassword = input;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('chat-screen').classList.remove('hidden');
+            } else { 
+                alert("Mã truy cập không hợp lệ!"); 
+            }
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            const chatBox = document.getElementById('chat-box');
+            
+            // User Message
+            chatBox.innerHTML += `<div class="flex justify-end animate-slide-up"><div class="user-bubble p-5 shadow-2xl text-white">${message}</div></div>`;
+            chatHistory.push({ role: "user", content: message });
+            inputField.value = '';
+            
+            // Loading
+            const loadingId = 'loading-' + Date.now();
+            chatBox.innerHTML += `<div id="${loadingId}" class="ai-bubble p-5 self-start flex gap-2 text-gray-500"><span class="loading-dot">•</span><span class="loading-dot" style="animation-delay:0.2s">•</span><span class="loading-dot" style="animation-delay:0.4s">•</span> PROCESSING</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
 
             try {
-                const res = await fetch('/api/chat', {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: h, password: p })
+                    body: JSON.stringify({ messages: chatHistory, password: userPassword })
                 });
-                const data = await res.json();
-                if (res.ok) {
-                    const txt = data.choices[0].message.content;
-                    box.innerHTML += `<div class="ai-msg p-3 shadow-sm">${txt}</div>`;
-                    h.push({role:"assistant", content:txt});
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (response.ok) {
+                    const aiReply = data.choices[0].message.content;
+                    chatBox.innerHTML += `<div class="flex justify-start animate-slide-up"><div class="ai-bubble p-5 text-gray-200 leading-relaxed">${aiReply}</div></div>`;
+                    chatHistory.push({ role: "assistant", content: aiReply });
                 } else {
-                    // HIỂN THỊ LỖI DƯỚI DẠNG CHỮ (KHÔNG HIỆN [OBJECT OBJECT])
-                    const errorTxt = typeof data.error === 'object' ? JSON.stringify(data.error) : data.error;
-                    box.innerHTML += `<div class="ai-msg p-3 text-red-500">Lỗi: ${errorTxt}</div>`;
+                    chatBox.innerHTML += `<div class="p-4 text-red-400 bg-red-950/30 rounded-xl border border-red-900/50">Error: ${data.error}</div>`;
                 }
-            } catch (err) { box.innerHTML += `<div class="ai-msg p-3 text-red-500">Lỗi kết nối!</div>`; }
-            box.scrollTop = box.scrollHeight;
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `<div class="p-4 text-red-400 bg-red-950/30 rounded-xl border border-red-900/50">Connection Failed.</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
 </body>
