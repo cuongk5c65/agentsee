@@ -1,6 +1,5 @@
 module.exports = async (req, res) => {
   try {
-    // Vercel tự parse body cho chúng ta
     const { messages, password } = req.body;
 
     if (password !== "123456") {
@@ -8,7 +7,7 @@ module.exports = async (req, res) => {
     }
 
     if (!process.env.GROQ_API_KEY) {
-      return res.status(500).json({ error: "Thiếu API Key trên Vercel!" });
+      return res.status(500).json({ error: "Mày chưa dán API Key vào Vercel!" });
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -20,18 +19,23 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         model: "llama3-8b-8192",
         messages: [
-          { role: "system", content: "Bạn là trợ lý của MR CƯỜNG. Hãy trả lời chuyên sâu về AI Agent bằng tiếng Việt." },
+          { role: "system", content: "Mày là trợ lý của MR CƯỜNG. Trả lời súc tích bằng tiếng Việt." },
           ...messages
         ]
       }),
     });
 
     const data = await response.json();
-    
-    // Gửi thẳng cái data này về cho Frontend
+
+    // NẾU AI BÁO LỖI, TRẢ VỀ CÂU CHỬI CỦA NÓ LUÔN ĐỂ BIẾT ĐƯỜNG SỬA
+    if (!response.ok) {
+      const errorMsg = data.error?.message || JSON.stringify(data);
+      return res.status(response.status).json({ error: errorMsg });
+    }
+
     return res.status(200).json(data);
 
   } catch (error) {
-    return res.status(500).json({ error: "Lỗi Server: " + error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
