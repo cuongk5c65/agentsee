@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     }
 
     if (!process.env.GROQ_API_KEY) {
-      return res.status(500).json({ error: "Mày chưa dán API Key vào Vercel!" });
+      return res.status(500).json({ error: "Thiếu API Key trên Vercel!" });
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -17,17 +17,21 @@ module.exports = async (req, res) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        // ĐÃ CẬP NHẬT MODEL MỚI NHẤT (Llama 3.3 70B)
+        model: "llama-3.3-70b-versatile", 
         messages: [
-          { role: "system", content: "Mày là trợ lý của MR CƯỜNG. Trả lời súc tích bằng tiếng Việt." },
+          { 
+            role: "system", 
+            content: "Mày là trợ lý chuyên gia AI của MR CƯỜNG. Hãy trả lời súc tích, thông minh bằng tiếng Việt về chủ đề AI và AI Agent." 
+          },
           ...messages
-        ]
+        ],
+        temperature: 0.7
       }),
     });
 
     const data = await response.json();
 
-    // NẾU AI BÁO LỖI, TRẢ VỀ CÂU CHỬI CỦA NÓ LUÔN ĐỂ BIẾT ĐƯỜNG SỬA
     if (!response.ok) {
       const errorMsg = data.error?.message || JSON.stringify(data);
       return res.status(response.status).json({ error: errorMsg });
@@ -36,6 +40,6 @@ module.exports = async (req, res) => {
     return res.status(200).json(data);
 
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: "Lỗi kết nối AI: " + error.message });
   }
 };
